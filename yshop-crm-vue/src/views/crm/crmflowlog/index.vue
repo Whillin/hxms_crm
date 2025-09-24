@@ -35,10 +35,10 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="关联对象 contract-合同 receivables-回款 invoice-发票" prop="types">
+      <el-form-item label="关联对象类型" prop="types">
         <el-input
           v-model="queryParams.types"
-          placeholder="请输入关联对象 contract-合同 receivables-回款 invoice-发票"
+          placeholder="请输入关联对象类型"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -123,7 +123,7 @@
       <el-table-column label="审批流程ID" align="center" prop="flowId" />
       <el-table-column label="对象ID（如审批类型ID）" align="center" prop="typesId" />
       <el-table-column label="审核人" align="center" prop="adminId" />
-      <el-table-column label="关联对象 contract-合同 receivables-回款 invoice-发票" align="center" prop="types" />
+      <el-table-column label="关联对象类型" align="center" prop="types" />
       <el-table-column label="审核人名称" align="center" prop="nickname" />
       <el-table-column label="审核意见" align="center" prop="remark" />
       <el-table-column label="1审核结束" align="center" prop="isEnd" />

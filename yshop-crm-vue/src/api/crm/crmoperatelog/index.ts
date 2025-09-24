@@ -4,8 +4,7 @@ import request from '@/config/axios'
 export interface OperatelogVO {
   id: number // ID
   customerId: number // 客户ID
-  contractId: number // 合同ID
-  receivableId: number // 回款ID
+  // 合同ID和回款ID字段已删除
   nickname: string // 姓名
   username: string // 管理员账号
   url: string // 操作页面

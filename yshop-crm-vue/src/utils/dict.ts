@@ -144,8 +144,7 @@ export enum DICT_TYPE {
   CRM_CUSTOMER_LEVEL = 'customer_level',
   CRM_FOLLOW_STATUS = 'follow_status',
   CRM_BUSINESS_STATUS = 'business_status',
-  CONTRACT_CHECK_STATUS = 'contract_check_status',
-  CONTRACT_HANDLE_STATUS = 'contract_handle_status',
+  // 合同相关字典常量已删除
 
 
 

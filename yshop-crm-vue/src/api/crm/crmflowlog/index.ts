@@ -6,7 +6,7 @@ export interface FlowLogVO {
   flowId: number // 审批流程ID
   typesId: number // 对象ID（如审批类型ID）
   adminId: number // 审核人
-  types: string // 关联对象 contract-合同 receivables-回款 invoice-发票
+  types: string // 关联对象类型
   nickname: string // 审核人名称
   remark: string // 审核意见
   isEnd: number // 1审核结束

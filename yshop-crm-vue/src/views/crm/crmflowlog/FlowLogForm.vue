@@ -16,8 +16,8 @@
       <el-form-item label="审核人" prop="adminId">
         <el-input v-model="formData.adminId" placeholder="请输入审核人" />
       </el-form-item>
-      <el-form-item label="关联对象 contract-合同 receivables-回款 invoice-发票" prop="types">
-        <el-input v-model="formData.types" placeholder="请输入关联对象 contract-合同 receivables-回款 invoice-发票" />
+      <el-form-item label="关联对象类型" prop="types">
+        <el-input v-model="formData.types" placeholder="请输入关联对象类型" />
       </el-form-item>
       <el-form-item label="审核人名称" prop="nickname">
         <el-input v-model="formData.nickname" placeholder="请输入审核人名称" />
@@ -68,7 +68,7 @@ const formRules = reactive({
   flowId: [{ required: true, message: '审批流程ID不能为空', trigger: 'blur' }],
   typesId: [{ required: true, message: '对象ID（如审批类型ID）不能为空', trigger: 'blur' }],
   adminId: [{ required: true, message: '审核人不能为空', trigger: 'blur' }],
-  types: [{ required: true, message: '关联对象 contract-合同 receivables-回款 invoice-发票不能为空', trigger: 'blur' }],
+  types: [{ required: true, message: '关联对象类型不能为空', trigger: 'blur' }],
   isEnd: [{ required: true, message: '1审核结束不能为空', trigger: 'blur' }],
   status: [{ required: true, message: '0审核未通过,1审核通过不能为空', trigger: 'blur' }]
 })

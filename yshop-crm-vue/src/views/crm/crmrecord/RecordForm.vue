@@ -150,12 +150,7 @@
           <el-tab-pane label="商机">
             <BusinessList  :customer-id="customerId" />
           </el-tab-pane>
-          <el-tab-pane label="合同">
-            <ContractList  :customer-id="customerId" />
-          </el-tab-pane>
-          <el-tab-pane label="回款">
-            <ReceivablesList  :customer-id="customerId" />
-          </el-tab-pane>
+          <!-- 合同和回款标签页已删除 -->
           <el-tab-pane label="日志">
             <LogList  :customer-id="customerId" />
           </el-tab-pane>
@@ -175,8 +170,7 @@ import * as AreaApi from '@/api/system/area'
 import RecordList from '@/views/crm/crmcustomer/components/record/index.vue'
 import ContactsList from '@/views/crm/crmcustomer/components/contacts/index.vue'
 import BusinessList from '@/views/crm/crmcustomer/components/business/index.vue'
-import ContractList from '@/views/crm/crmcustomer/components/contract/index.vue'
-import ReceivablesList from '@/views/crm/crmcustomer/components/receivables/index.vue'
+// 合同和应收款组件导入已删除
 import LogList from '@/views/crm/crmcustomer/components/log/index.vue'
 
 /** 跟进记录 表单 */

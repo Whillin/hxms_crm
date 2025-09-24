@@ -45,21 +45,6 @@
           <el-card :bordered="false" dis-hover :padding="12">
             <template #header>
               <div class="acea-row row-between-wrapper">
-                <span>即将到期的合同</span>
-                <el-tag type="success">全部</el-tag>
-              </div>
-            </template>
-            <div class="content">
-              <span class="content-number spBlock"><count-to :start-val="0" :end-val="count.contractDueCount" :duration="3600" class="card-panel-num" /></span>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-      <el-row :gutter="24" class="baseInfo">
-        <el-col :xs="12" :sm="12" :lg="6" class="ivu-mb">
-          <el-card :bordered="false" dis-hover :padding="12">
-            <template #header>
-              <div  class="acea-row row-between-wrapper">
                 <span>即将到期的客户</span>
                 <el-tag type="success">全部</el-tag>
               </div>
@@ -69,36 +54,12 @@
             </div>
           </el-card>
         </el-col>
-        <el-col :xs="12" :sm="12" :lg="6" class="ivu-mb">
-          <el-card :bordered="false" dis-hover :padding="12">
-            <template #header>
-              <div class="acea-row row-between-wrapper">
-                <span>待回款的合同</span>
-                <el-tag type="success">全部</el-tag>
-              </div>
-            </template>
-            <div class="content">
-              <span class="content-number spBlock"><count-to :start-val="0" :end-val="count.contractReturnCount" :duration="3000" class="card-panel-num" /></span>
-            </div>
-          </el-card>
-        </el-col>
+      </el-row>
+      <el-row :gutter="24" class="baseInfo">
         <el-col :xs="12" :sm="12" :lg="6" class="ivu-mb">
           <el-card :bordered="false" dis-hover :padding="12">
             <template #header>
               <div  class="acea-row row-between-wrapper">
-                <span>我的发票</span>
-                <el-tag type="success">全部</el-tag>
-              </div>
-            </template>
-            <div class="content">
-              <span class="content-number spBlock"><count-to :start-val="0" :end-val="count.myInvoiceCount" :duration="3200" class="card-panel-num" /></span>
-            </div>
-          </el-card>
-        </el-col>
-        <el-col :xs="12" :sm="12" :lg="6" class="ivu-mb">
-          <el-card :bordered="false" dis-hover :padding="12">
-            <template #header>
-              <div class="acea-row row-between-wrapper">
                 <span>商品总数</span>
                 <el-tag type="success">全部</el-tag>
               </div>
@@ -110,33 +71,9 @@
         </el-col>
       </el-row>
     </div>
-    <!-- <PanelGroupT /> -->
+    <!-- 已移除合同、回款、发票审批相关的标签页 -->
     <div class="divBox" style="background-color:#ffffff">
-      <el-tabs
-        v-model="activeName"
-        type="card"
-        class="demo-tabs"
-        @tab-click="handleClick"
-      >
-        <el-tab-pane name="first">
-          <template #label>
-              <span><el-badge :value="contractCheckCount" :hidden="contractCheckCount == 0">合同审批</el-badge></span>
-          </template>
-          <ContractList @get-contract-count="getContractCount" />
-        </el-tab-pane>
-        <el-tab-pane name="second">
-          <template #label>
-              <span><el-badge :value="receivablesCheckCount" :hidden="receivablesCheckCount == 0">回款审批</el-badge></span>
-          </template>
-          <ReceivablesList @get-receivables-count="getReceivablesCount" />
-        </el-tab-pane>
-        <el-tab-pane name="third">
-          <template #label>
-              <span><el-badge :value="invoiceCheckCount" :hidden="invoiceCheckCount == 0">发票审批</el-badge></span>
-          </template>
-          <InvoiceList @get-invoice-count="getInvoiceCount" />
-        </el-tab-pane>
-      </el-tabs>
+      <el-empty description="审批功能已移除" />
     </div>
   </div>
 </template>
@@ -146,10 +83,7 @@ import PanelGroupT from './PanelGroupT.vue'
 import { formatTime } from '@/utils'
 import { useUserStore } from '@/store/modules/user'
 import avatarImg from '@/assets/imgs/avatar.gif'
-import ContractList from './components/contract/index.vue'
-import ReceivablesList from './components/receivables/index.vue'
-import InvoiceList from './components/invoice/index.vue'
-import { ContractApi } from '@/api/crm/crmcontract'
+// 合同、应收款、发票相关组件导入已删除
 
 const userStore = useUserStore()
 const avatar = userStore.getUser.avatar ? userStore.getUser.avatar : avatarImg
@@ -160,37 +94,18 @@ const count = ref({
   followCustomerCount: 0,
   followBusinessCount: 0,
   followCluesCount: 0,
-  contractDueCount: 0,
   customerDueCount: 0,
-  contractReturnCount: 0,
-  myInvoiceCount: 0,
   productCount: 0,
 })
 const loading = ref(true)
 const notice = ref([])
-const activeName = ref('first')
-const contractCheckCount = ref(0)
-const receivablesCheckCount = ref(0)
-const invoiceCheckCount = ref(0)
-
-const getContractCount = (count) => {
-  contractCheckCount.value = count
-}
-
-const getReceivablesCount = (count) => {
-  receivablesCheckCount.value = count
-}
-
-const getInvoiceCount = (count) => {
-  invoiceCheckCount.value = count
-}
 
 /** 查询列表 */
 const getData = async () => {
   try {
-    const data = await ContractApi.getIndexCount()
-
-    count.value = data
+    // 这里可以调用其他API获取统计数据
+    // const data = await SomeApi.getIndexCount()
+    // count.value = data
   } finally {
   }
 }

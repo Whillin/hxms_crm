@@ -40,9 +40,8 @@
       <el-table-column label="审批类型" align="center" prop="types">
         <template #default="scope">
           <div>
-            <el-tag v-if="scope.row.types == 'contract'"  type="success">合同</el-tag>
-            <el-tag v-else-if="scope.row.types == 'receivables'"  type="primary">回款</el-tag>
-            <el-tag v-else  type="danger">发票</el-tag>
+            <!-- 合同、回款、发票类型已删除 -->
+            <el-tag type="info">{{ scope.row.types }}</el-tag>
           </div>
         </template>
       </el-table-column>

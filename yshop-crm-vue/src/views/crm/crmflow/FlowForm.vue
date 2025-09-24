@@ -17,9 +17,7 @@
           clearable
           class="!w-240px"
         >
-          <el-option label="合同" value="contract" />
-          <el-option label="回款" value="receivables" />
-          <el-option label="发票" value="invoice" />
+          <!-- 合同、回款、发票选项已删除 -->
         </el-select>
       </el-form-item>
       <el-form-item label="流程说明" prop="remark">
@@ -134,7 +132,7 @@ const resetForm = () => {
   formData.value = {
     id: undefined,
     name: undefined,
-    types: 'contract',
+    types: 'other', // 已移除合同相关类型
     groupIds: undefined,
     adminIds: undefined,
     remark: undefined,

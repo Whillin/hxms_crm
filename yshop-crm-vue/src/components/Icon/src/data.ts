@@ -1262,15 +1262,14 @@ export const IconJson = {
     'file-archive',
     'file-audio',
     'file-code',
-    'file-contract',
+    // 已删除 'file-contract' 图标
     'file-csv',
     'file-download',
     'file-excel',
     'file-export',
     'file-image',
     'file-import',
-    'file-invoice',
-    'file-invoice-dollar',
+    // 已删除 'file-invoice' 和 'file-invoice-dollar' 图标
     'file-medical',
     'file-medical-alt',
     'file-pdf',

@@ -4,7 +4,7 @@ import request from '@/config/axios'
 export interface FlowVO {
   id: number // id
   name: string // 审批流名称
-  types: string // 关联对象 contract-合同 receivables-回款 invoice-发票
+  types: string // 关联对象类型
   groupIds: string // 组别ID（0为全部）
   adminIds: string // 员工ID
   remark: string // 流程说明
