@@ -14,7 +14,6 @@ import {
   ElTabs,
   ElTransfer
 } from 'element-plus'
-import FcDesigner from '@form-create/designer'
 import formCreate from '@form-create/element-ui'
 import install from '@form-create/element-ui/auto-import'
 
@@ -70,5 +69,4 @@ export const setupFormCreate = (app: App<Element>) => {
   })
   formCreate.use(install)
   app.use(formCreate)
-  app.use(FcDesigner)
 }

@@ -67,7 +67,8 @@ watch(
       to="/"
     >
       <img
-        class="h-[calc(var(--logo-height)-10px)] w-[calc(var(--logo-height)-10px)]"
+        class="h-[calc(var(--logo-height)-8px)] w-[calc(var(--logo-height)-8px)] object-contain"
+        style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"
         src="@/assets/imgs/logo.png"
       />
       <div

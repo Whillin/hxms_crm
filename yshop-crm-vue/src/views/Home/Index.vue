@@ -71,10 +71,7 @@
         </el-col>
       </el-row>
     </div>
-    <!-- 已移除合同、回款、发票审批相关的标签页 -->
-    <div class="divBox" style="background-color:#ffffff">
-      <el-empty description="审批功能已移除" />
-    </div>
+
   </div>
 </template>
 <script setup lang="ts">

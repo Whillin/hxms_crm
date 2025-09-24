@@ -1,4 +1,4 @@
-意象电商 http://www.yixiang.co
+华星名仕汽车销售管理系统 http://www.yixiang.co
 Application Version: ${yshop.info.version}
 Spring Boot Version: ${spring-boot.version}
 

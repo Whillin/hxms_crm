@@ -7,7 +7,6 @@ export default {
     login: '登录',
     required: '该项为必填项',
     loginOut: '退出系统',
-    document: '项目文档',
     profile: '个人中心',
     reminder: '温馨提示',
     loginOutMessage: '是否退出本系统？',
@@ -113,8 +112,8 @@ export default {
     small: '小'
   },
   login: {
-    welcome: '欢迎使用yshop意象客户关系管理系统',
-    message: '欢迎使用yshop意象客户关系管理系统',
+    welcome: '欢迎使用华星名仕汽车销售管理系统',
+    message: '欢迎使用华星名仕汽车销售管理系统',
     tenantname: '租户名称',
     username: '用户名',
     password: '密码',

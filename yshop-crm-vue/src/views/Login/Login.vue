@@ -9,7 +9,12 @@
       >
         <!-- 左上角的 logo + 系统标题 -->
         <div class="flex items-center relative text-white">
-          <img alt="" class="w-48px h-48px mr-10px" src="@/assets/imgs/logo.png" />
+          <img 
+            alt="" 
+            class="w-48px h-48px mr-10px object-contain" 
+            style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"
+            src="@/assets/imgs/logo.png" 
+          />
           <span class="text-20px font-bold">{{ underlineToHump(appStore.getTitle) }}</span>
         </div>
         <!-- 左边的背景图 + 欢迎语 -->
@@ -31,7 +36,12 @@
         <!-- 右上角的主题、语言选择 -->
         <div class="flex justify-between items-center text-white @2xl:justify-end @xl:justify-end">
           <div class="flex items-center @2xl:hidden @xl:hidden">
-            <img alt="" class="w-48px h-48px mr-10px" src="@/assets/imgs/logo.png" />
+            <img 
+              alt="" 
+              class="w-48px h-48px mr-10px object-contain" 
+              style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;"
+              src="@/assets/imgs/logo.png" 
+            />
             <span class="text-20px font-bold">{{ underlineToHump(appStore.getTitle) }}</span>
           </div>
           <div class="flex justify-end items-center space-x-10px">
