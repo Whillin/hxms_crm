@@ -3,7 +3,7 @@ package co.yixiang.yshop.framework.websocket.core.handler;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import co.yixiang.yshop.framework.common.util.json.JsonUtils;
-import co.yixiang.yshop.framework.tenant.core.util.TenantUtils;
+// 租户相关导入已移除
 import co.yixiang.yshop.framework.websocket.core.listener.WebSocketMessageListener;
 import co.yixiang.yshop.framework.websocket.core.message.JsonWebSocketMessage;
 import co.yixiang.yshop.framework.websocket.core.util.WebSocketFrameworkUtils;
@@ -73,8 +73,8 @@ public class JsonWebSocketMessageHandler extends TextWebSocketHandler {
             // 2.3 处理消息
             Type type = TypeUtil.getTypeArgument(messageListener.getClass(), 0);
             Object messageObj = JsonUtils.parseObject(jsonMessage.getContent(), type);
-            Long tenantId = WebSocketFrameworkUtils.getTenantId(session);
-            TenantUtils.execute(tenantId, () -> messageListener.onMessage(session, messageObj));
+            // 租户功能已移除，直接执行消息处理
+            messageListener.onMessage(session, messageObj);
         } catch (Throwable ex) {
             log.error("[handleTextMessage][session({}) message({}) 处理异常]", session.getId(), message.getPayload());
         }

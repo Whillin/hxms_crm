@@ -26,6 +26,8 @@
           :mode="mode"
           :type="verifyType"
           :vSpace="vSpace"
+          @success="handleSuccess"
+          @error="handleError"
         />
       </div>
     </div>
@@ -41,6 +43,7 @@ import { computed, ref, toRefs, watchEffect } from 'vue'
 
 export default {
   name: 'Vue3Verify',
+  emits: ['success', 'error'],
   components: {
     VerifySlide,
     VerifyPoints
@@ -82,7 +85,7 @@ export default {
       type: Object
     }
   },
-  setup(props) {
+  setup(props, { emit }) {
     const { t } = useI18n()
     const { captchaType, mode } = toRefs(props)
     const clickShow = ref(false)
@@ -98,6 +101,14 @@ export default {
         return true
       }
     })
+    
+    const handleSuccess = (data) => {
+      emit('success', data)
+    }
+    
+    const handleError = (data) => {
+      emit('error', data)
+    }
     /**
      * refresh
      * @description 刷新
@@ -137,7 +148,9 @@ export default {
       instance,
       showBox,
       closeBox,
-      show
+      show,
+      handleSuccess,
+      handleError
     }
   }
 }

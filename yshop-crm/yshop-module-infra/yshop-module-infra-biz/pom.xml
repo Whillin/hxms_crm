@@ -31,10 +31,7 @@
         </dependency>
 
         <!-- 业务组件 -->
-        <dependency>
-            <groupId>co.yixiang.boot</groupId>
-            <artifactId>yshop-spring-boot-starter-biz-tenant</artifactId>
-        </dependency>
+        <!-- 租户依赖已移除 -->
 
         <!-- Web 相关 -->
         <dependency>

@@ -1,6 +1,6 @@
 package co.yixiang.yshop.module.shop.framework.web.config;
 
-import co.yixiang.yshop.framework.swagger.config.YshopSwaggerAutoConfiguration;
+// import co.yixiang.yshop.framework.swagger.config.YshopSwaggerAutoConfiguration;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,11 @@ public class ShopWebConfiguration {
      */
     @Bean
     public GroupedOpenApi shopGroupedOpenApi() {
-        return YshopSwaggerAutoConfiguration.buildGroupedOpenApi("shop");
+        // return YshopSwaggerAutoConfiguration.buildGroupedOpenApi("shop");
+        return GroupedOpenApi.builder()
+                .group("shop")
+                .pathsToMatch("/admin-api/shop/**")
+                .build();
     }
 
 }

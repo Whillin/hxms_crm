@@ -2,7 +2,7 @@ package co.yixiang.yshop.module.mp.controller.admin.open;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
-import co.yixiang.yshop.framework.tenant.core.util.TenantUtils;
+// import co.yixiang.yshop.framework.tenant.core.util.TenantUtils;
 import co.yixiang.yshop.module.mp.controller.admin.open.vo.MpOpenCheckSignatureReqVO;
 import co.yixiang.yshop.module.mp.controller.admin.open.vo.MpOpenHandleMessageReqVO;
 import co.yixiang.yshop.module.mp.dal.dataobject.account.MpAccountDO;
@@ -72,8 +72,9 @@ public class MpOpenController {
         Assert.notNull(account, "公众号 appId({}) 不存在", appId);
         try {
             MpContextHolder.setAppId(appId);
-            return TenantUtils.execute(account.getTenantId(),
-                    () -> handleMessage0(appId, content, reqVO));
+            // return TenantUtils.execute(account.getTenantId(),
+            //         () -> handleMessage0(appId, content, reqVO));
+            return handleMessage0(appId, content, reqVO);
         } finally {
             MpContextHolder.clear();
         }

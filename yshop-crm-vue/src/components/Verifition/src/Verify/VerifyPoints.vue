@@ -182,9 +182,9 @@ const canvasClick = (e) => {
               refresh()
             }, 1500)
           }
-          proxy.$parent.$emit('success', { captchaVerification })
+          proxy.$emit('success', { captchaVerification })
         } else {
-          proxy.$parent.$emit('error', proxy)
+          proxy.$emit('error', proxy)
           barAreaColor.value = '#d9534f'
           barAreaBorderColor.value = '#d9534f'
           text.value = t('captcha.fail')

@@ -7,7 +7,7 @@ import co.yixiang.yshop.module.system.controller.admin.permission.vo.menu.MenuSa
 import co.yixiang.yshop.module.system.dal.dataobject.permission.MenuDO;
 import co.yixiang.yshop.module.system.dal.mysql.permission.MenuMapper;
 import co.yixiang.yshop.module.system.enums.permission.MenuTypeEnum;
-import co.yixiang.yshop.module.system.service.tenant.TenantService;
+// import co.yixiang.yshop.module.system.service.tenant.TenantService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -42,8 +42,8 @@ public class MenuServiceImplTest extends BaseDbUnitTest {
 
     @MockBean
     private PermissionService permissionService;
-    @MockBean
-    private TenantService tenantService;
+    // @MockBean
+    // private TenantService tenantService;
 
     @Test
     public void testCreateMenu_success() {
@@ -173,10 +173,10 @@ public class MenuServiceImplTest extends BaseDbUnitTest {
         menuMapper.insert(menu102);
         // mock 过滤菜单
         Set<Long> menuIds = asSet(100L, 101L);
-        doNothing().when(tenantService).handleTenantMenu(argThat(handler -> {
-            handler.handle(menuIds);
-            return true;
-        }));
+        // doNothing().when(tenantService).handleTenantMenu(argThat(handler -> {
+        //     handler.handle(menuIds);
+        //     return true;
+        // }));
         // 准备参数
         MenuListReqVO reqVO = new MenuListReqVO().setStatus(CommonStatusEnum.ENABLE.getStatus());
 

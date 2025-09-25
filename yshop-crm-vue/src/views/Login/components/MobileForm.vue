@@ -10,21 +10,9 @@
     size="large"
   >
     <el-row style="margin-right: -10px; margin-left: -10px">
-      <!-- 租户名 -->
       <el-col :span="24" style="padding-right: 10px; padding-left: 10px">
         <el-form-item>
           <LoginFormTitle style="width: 100%" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24" style="padding-right: 10px; padding-left: 10px">
-        <el-form-item v-if="loginData.tenantEnable === 'true'" prop="tenantName">
-          <el-input
-            v-model="loginData.loginForm.tenantName"
-            :placeholder="t('login.tenantNamePlaceholder')"
-            :prefix-icon="iconHouse"
-            type="primary"
-            link
-          />
         </el-form-item>
       </el-col>
       <!-- 手机号 -->
@@ -97,9 +85,9 @@ import type { RouteLocationNormalizedLoaded } from 'vue-router'
 
 import { useIcon } from '@/hooks/web/useIcon'
 
-import { setTenantId, setToken } from '@/utils/auth'
+import { setToken } from '@/utils/auth'
 import { usePermissionStore } from '@/store/modules/permission'
-import { getTenantIdByName, sendSmsCode, smsLogin } from '@/api/login'
+import { sendSmsCode, smsLogin } from '@/api/login'
 import LoginFormTitle from './LoginFormTitle.vue'
 import { LoginStateEnum, useFormValid, useLoginState } from './useLogin'
 import { ElLoading } from 'element-plus'
@@ -112,7 +100,6 @@ const permissionStore = usePermissionStore()
 const { currentRoute, push } = useRouter()
 const formSmsLogin = ref()
 const loginLoading = ref(false)
-const iconHouse = useIcon({ icon: 'ep:house' })
 const iconCellphone = useIcon({ icon: 'ep:cellphone' })
 const iconCircleCheck = useIcon({ icon: 'ep:circle-check' })
 const { validForm } = useFormValid(formSmsLogin)
@@ -120,20 +107,17 @@ const { handleBackLogin, getLoginState } = useLoginState()
 const getShow = computed(() => unref(getLoginState) === LoginStateEnum.MOBILE)
 
 const rules = {
-  tenantName: [required],
   mobileNumber: [required],
   code: [required]
 }
 const loginData = reactive({
   codeImg: '',
-  tenantEnable: import.meta.env.VITE_APP_TENANT_ENABLE,
   token: '',
   loading: {
     signIn: false
   },
   loginForm: {
     uuid: '',
-    tenantName: 'yshop源码',
     mobileNumber: '',
     code: ''
   }
@@ -151,7 +135,6 @@ const smsVO = reactive({
 const mobileCodeTimer = ref(0)
 const redirect = ref<string>('')
 const getSmsCode = async () => {
-  await getTenantId()
   smsVO.smsCode.mobile = loginData.loginForm.mobileNumber
   await sendSmsCode(smsVO.smsCode).then(async () => {
     message.success(t('login.SmsSendMsg'))
@@ -174,16 +157,8 @@ watch(
     immediate: true
   }
 )
-// 获取租户 ID
-const getTenantId = async () => {
-  if (loginData.tenantEnable === 'true') {
-    const res = await getTenantIdByName(loginData.loginForm.tenantName)
-    setTenantId(res)
-  }
-}
 // 登录
 const signIn = async () => {
-  await getTenantId()
   const data = await validForm()
   if (!data) return
   ElLoading.service({

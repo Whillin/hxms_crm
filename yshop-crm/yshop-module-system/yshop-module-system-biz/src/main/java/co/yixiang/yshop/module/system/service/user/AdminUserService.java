@@ -28,6 +28,14 @@ public interface AdminUserService {
     Long createUser(@Valid UserSaveReqVO createReqVO);
 
     /**
+     * 创建用户（直接使用DO对象）
+     *
+     * @param user 用户信息
+     * @return 用户编号
+     */
+    Long createUser(AdminUserDO user);
+
+    /**
      * 修改用户
      *
      * @param updateReqVO 用户信息
@@ -104,6 +112,22 @@ public interface AdminUserService {
      * @return 用户对象信息
      */
     AdminUserDO getUserByMobile(String mobile);
+
+    /**
+     * 通过邮箱获取用户
+     *
+     * @param email 邮箱
+     * @return 用户对象信息
+     */
+    AdminUserDO getUserByEmail(String email);
+
+    /**
+     * 加密密码
+     *
+     * @param password 明文密码
+     * @return 加密后的密码
+     */
+    String encodePassword(String password);
 
     /**
      * 获得用户分页列表

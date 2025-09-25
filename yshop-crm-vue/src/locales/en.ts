@@ -399,7 +399,29 @@ export default {
       confirmPassword: 'Confirm Password',
       email: 'Email',
       smsCode: 'SMS code',
-      mobile: 'Mobile'
+      mobile: 'Mobile',
+      // Registration related
+      register: 'Register',
+      registerButton: 'Register',
+      hasUser: 'Already have an account? Sign in',
+      nickname: 'Nickname',
+      fullName: 'Full Name',
+      nicknamePlaceholder: 'Please input nickname',
+      fullNamePlaceholder: 'Please input full name',
+      emailPlaceholder: 'Please input email address',
+      confirmPasswordPlaceholder: 'Please input password again',
+      // Validation messages
+      nicknameRequired: 'Please input nickname',
+      fullNameRequired: 'Please input full name',
+      mobileRequired: 'Please input mobile number',
+      mobileFormat: 'Please input correct mobile format',
+      emailRequired: 'Please input email address',
+      emailFormat: 'Please input correct email format',
+      passwordRequired: 'Please input password',
+      passwordLength: 'Password length at least 6 characters',
+      confirmPasswordRequired: 'Please input password again',
+      passwordMismatch: 'The two passwords are inconsistent',
+      registerSuccess: 'Registration successful!'
     }
   },
   profile: {

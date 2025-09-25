@@ -104,8 +104,9 @@ const editorConfig = computed((): IEditorConfig => {
           // 自定义增加 http  header
           headers: {
             Accept: '*',
-            Authorization: 'Bearer ' + getAccessToken(),
-            'tenant-id': getTenantId()
+            Authorization: 'Bearer ' + getAccessToken()
+            // 移除租户相关代码
+            // 'tenant-id': getTenantId()
           },
 
           // 跨域是否传递 cookie ，默认为 false

@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author yshop
  */
 @SuppressWarnings("SpringComponentScan") // 忽略 IDEA 无法识别 ${yshop.info.base-package}
-@SpringBootApplication(scanBasePackages = {"${yshop.info.base-package}.server", "${yshop.info.base-package}.module"})
+@SpringBootApplication(scanBasePackages = {"${yshop.info.base-package}.server", "${yshop.info.base-package}.module", "${yshop.info.base-package}.framework"})
 public class YshopServerApplication {
 
     public static void main(String[] args){

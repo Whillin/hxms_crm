@@ -312,7 +312,7 @@ const end = () => {
         setTimeout(() => {
           tipWords.value = ''
           proxy.$parent.closeBox()
-          proxy.$parent.$emit('success', { captchaVerification })
+          proxy.$emit('success', { captchaVerification })
         }, 1000)
       } else {
         moveBlockBackgroundColor.value = '#d9534f'
@@ -323,7 +323,7 @@ const end = () => {
         setTimeout(function () {
           refresh()
         }, 1000)
-        proxy.$parent.$emit('error', proxy)
+        proxy.$emit('error', proxy)
         tipWords.value = t('captcha.fail')
         setTimeout(() => {
           tipWords.value = ''

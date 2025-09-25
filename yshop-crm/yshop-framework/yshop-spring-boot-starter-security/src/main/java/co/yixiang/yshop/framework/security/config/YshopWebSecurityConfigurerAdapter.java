@@ -2,20 +2,37 @@ package co.yixiang.yshop.framework.security.config;
 
 import cn.hutool.core.collection.CollUtil;
 import co.yixiang.yshop.framework.security.core.filter.TokenAuthenticationFilter;
+import co.yixiang.yshop.framework.security.core.aop.PreAuthenticatedAspect;
+import co.yixiang.yshop.framework.security.core.context.TransmittableThreadLocalSecurityContextHolderStrategy;
+import co.yixiang.yshop.framework.security.core.service.SecurityFrameworkService;
+import co.yixiang.yshop.framework.security.core.service.SecurityFrameworkServiceImpl;
+import co.yixiang.yshop.framework.security.core.handler.AccessDeniedHandlerImpl;
+import co.yixiang.yshop.framework.security.core.handler.AuthenticationEntryPointImpl;
+import co.yixiang.yshop.framework.web.core.handler.GlobalExceptionHandler;
+import co.yixiang.yshop.module.system.api.oauth2.OAuth2TokenApi;
+import co.yixiang.yshop.module.system.api.permission.PermissionApi;
+import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import co.yixiang.yshop.framework.web.config.WebProperties;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import jakarta.annotation.Resource;
 import jakarta.annotation.security.PermitAll;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
@@ -42,31 +59,26 @@ import static co.yixiang.yshop.framework.common.util.collection.CollectionUtils.
  *
  * @author yshop
  */
-@AutoConfiguration
+@AutoConfiguration // 改为@AutoConfiguration注解以确保被Spring Boot自动加载
 @AutoConfigureOrder(-1) // 目的：先于 Spring Security 自动配置，避免一键改包后，org.* 基础包无法生效
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET) // 重新启用条件注解
 @EnableMethodSecurity(securedEnabled = true)
+@EnableWebSecurity // 添加@EnableWebSecurity注解
+@Slf4j
 public class YshopWebSecurityConfigurerAdapter {
+
+    static {
+        System.out.println("=== YshopWebSecurityConfigurerAdapter 类被加载 ===");
+        System.out.println("当前应用类型: " + org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.class.getName());
+        System.out.println("ConditionalOnWebApplication 条件检查...");
+    }
 
     @Resource
     private WebProperties webProperties;
     @Resource
     private SecurityProperties securityProperties;
 
-    /**
-     * 认证失败处理类 Bean
-     */
-    @Resource
-    private AuthenticationEntryPoint authenticationEntryPoint;
-    /**
-     * 权限不够处理器 Bean
-     */
-    @Resource
-    private AccessDeniedHandler accessDeniedHandler;
-    /**
-     * Token 认证过滤器 Bean
-     */
-    @Resource
-    private TokenAuthenticationFilter authenticationTokenFilter;
+    // 移除循环依赖的@Resource注入，改为在方法中直接创建
 
     /**
      * 自定义的权限映射 Bean 们
@@ -78,6 +90,14 @@ public class YshopWebSecurityConfigurerAdapter {
 
     @Resource
     private ApplicationContext applicationContext;
+
+    public YshopWebSecurityConfigurerAdapter() {
+        System.out.println("=== YshopWebSecurityConfigurerAdapter 构造函数被调用 ===");
+        log.info("YshopWebSecurityConfigurerAdapter 构造函数被调用");
+    }
+
+    // 移除重复的Bean定义，这些Bean已经在YshopSecurityAutoConfiguration中定义了
+    // 避免Bean重复定义导致的冲突
 
     /**
      * 由于 Spring Security 创建 AuthenticationManager 对象时，没声明 @Bean 注解，导致无法被注入
@@ -106,7 +126,10 @@ public class YshopWebSecurityConfigurerAdapter {
      * authenticated       |   用户登录后可访问
      */
     @Bean
-    protected SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity,
+                                           GlobalExceptionHandler globalExceptionHandler,
+                                           OAuth2TokenApi oauth2TokenApi) throws Exception {
+        log.info("YshopWebSecurityConfigurerAdapter - 开始配置 SecurityFilterChain...");
         // 登出
         httpSecurity
                 // 开启跨域
@@ -117,37 +140,59 @@ public class YshopWebSecurityConfigurerAdapter {
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(c -> c.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 // 一堆自定义的 Spring Security 处理器
-                .exceptionHandling(c -> c.authenticationEntryPoint(authenticationEntryPoint)
-                        .accessDeniedHandler(accessDeniedHandler));
+                .exceptionHandling(c -> c.authenticationEntryPoint(applicationContext.getBean(AuthenticationEntryPoint.class))
+                        .accessDeniedHandler(applicationContext.getBean(AccessDeniedHandler.class)));
         // 登录、登录暂时不使用 Spring Security 的拓展点，主要考虑一方面拓展多用户、多种登录方式相对复杂，一方面用户的学习成本较高
 
         // 获得 @PermitAll 带来的 URL 列表，免登录
+        log.info("YshopWebSecurityConfigurerAdapter - 开始获取 @PermitAll 注解的 URL 列表...");
         Multimap<HttpMethod, String> permitAllUrls = getPermitAllUrlsFromAnnotations();
+        log.info("YshopWebSecurityConfigurerAdapter - 获取到的 @PermitAll URLs: {}", permitAllUrls);
         // 设置每个请求的权限
         httpSecurity
-                // ①：全局共享规则
-                .authorizeHttpRequests(c -> c
+                .authorizeHttpRequests(c -> {
                     // 1.1 静态资源，可匿名访问
-                    .requestMatchers(HttpMethod.GET, "/*.html", "/*.html", "/*.css", "/*.js").permitAll()
-                    // 1.1 设置 @PermitAll 无需认证
-                    .requestMatchers(HttpMethod.GET, permitAllUrls.get(HttpMethod.GET).toArray(new String[0])).permitAll()
-                    .requestMatchers(HttpMethod.POST, permitAllUrls.get(HttpMethod.POST).toArray(new String[0])).permitAll()
-                    .requestMatchers(HttpMethod.PUT, permitAllUrls.get(HttpMethod.PUT).toArray(new String[0])).permitAll()
-                    .requestMatchers(HttpMethod.DELETE, permitAllUrls.get(HttpMethod.DELETE).toArray(new String[0])).permitAll()
-                    .requestMatchers(HttpMethod.HEAD, permitAllUrls.get(HttpMethod.HEAD).toArray(new String[0])).permitAll()
-                    .requestMatchers(HttpMethod.PATCH, permitAllUrls.get(HttpMethod.PATCH).toArray(new String[0])).permitAll()
-                    // 1.2 基于 yshop.security.permit-all-urls 无需认证
-                    .requestMatchers(securityProperties.getPermitAllUrls().toArray(new String[0])).permitAll()
-                    // 1.3 设置 App API 无需认证
-                    .requestMatchers(buildAppApi("/**")).permitAll()
-                )
-                // ②：每个项目的自定义规则
-                .authorizeHttpRequests(c -> authorizeRequestsCustomizers.forEach(customizer -> customizer.customize(c)))
-                // ③：兜底规则，必须认证
-                .authorizeHttpRequests(c -> c.anyRequest().authenticated());
+                    c.requestMatchers(HttpMethod.GET, "/*.html", "/*.css", "/*.js").permitAll();
+                    
+                    // 1.2 设置 @PermitAll 无需认证
+                    if (!permitAllUrls.get(HttpMethod.GET).isEmpty()) {
+                        c.requestMatchers(HttpMethod.GET, permitAllUrls.get(HttpMethod.GET).toArray(new String[0])).permitAll();
+                    }
+                    if (!permitAllUrls.get(HttpMethod.POST).isEmpty()) {
+                        c.requestMatchers(HttpMethod.POST, permitAllUrls.get(HttpMethod.POST).toArray(new String[0])).permitAll();
+                    }
+                    if (!permitAllUrls.get(HttpMethod.PUT).isEmpty()) {
+                        c.requestMatchers(HttpMethod.PUT, permitAllUrls.get(HttpMethod.PUT).toArray(new String[0])).permitAll();
+                    }
+                    if (!permitAllUrls.get(HttpMethod.DELETE).isEmpty()) {
+                        c.requestMatchers(HttpMethod.DELETE, permitAllUrls.get(HttpMethod.DELETE).toArray(new String[0])).permitAll();
+                    }
+                    if (!permitAllUrls.get(HttpMethod.HEAD).isEmpty()) {
+                        c.requestMatchers(HttpMethod.HEAD, permitAllUrls.get(HttpMethod.HEAD).toArray(new String[0])).permitAll();
+                    }
+                    if (!permitAllUrls.get(HttpMethod.PATCH).isEmpty()) {
+                        c.requestMatchers(HttpMethod.PATCH, permitAllUrls.get(HttpMethod.PATCH).toArray(new String[0])).permitAll();
+                    }
+                    
+                    // 1.3 基于 yshop.security.permit-all-urls 无需认证
+                    log.info("YshopWebSecurityConfigurerAdapter - 从配置文件获取的 permit-all-urls: {}", securityProperties.getPermitAllUrls());
+                    if (!securityProperties.getPermitAllUrls().isEmpty()) {
+                        c.requestMatchers(securityProperties.getPermitAllUrls().toArray(new String[0])).permitAll();
+                    }
+                    
+                    // 1.4 设置 App API 无需认证
+                    c.requestMatchers(buildAppApi("/**")).permitAll();
+                    
+                    // 每个项目的自定义规则
+                    authorizeRequestsCustomizers.forEach(customizer -> customizer.customize(c));
+                    
+                    // 兜底规则，必须认证
+                    c.anyRequest().authenticated();
+                });
 
-        // 添加 Token Filter
-        httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        // 添加 Token Filter - 从YshopSecurityAutoConfiguration获取Bean
+        httpSecurity.addFilterBefore(applicationContext.getBean(TokenAuthenticationFilter.class), UsernamePasswordAuthenticationFilter.class);
+        log.info("YshopWebSecurityConfigurerAdapter - SecurityFilterChain配置完成");
         return httpSecurity.build();
     }
 
@@ -177,6 +222,9 @@ public class YshopWebSecurityConfigurerAdapter {
             if (urls.isEmpty()) {
                 continue;
             }
+
+            // 添加调试日志
+            log.info("Found @PermitAll annotated method: {} with URLs: {}", handlerMethod.getMethod().getName(), urls);
 
             // 特殊：使用 @RequestMapping 注解，并且未写 method 属性，此时认为都需要免登录
             Set<RequestMethod> methods = entry.getKey().getMethodsCondition().getMethods();
@@ -213,6 +261,10 @@ public class YshopWebSecurityConfigurerAdapter {
                 }
             });
         }
+        
+        // 添加调试日志，输出所有识别到的@PermitAll URL
+        log.info("All @PermitAll URLs: {}", result);
+        
         return result;
     }
 

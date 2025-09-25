@@ -9,13 +9,14 @@ import axios, {
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 import qs from 'qs'
 import { config } from '@/config/axios/config'
-import { getAccessToken, getRefreshToken, getTenantId, removeToken, setToken } from '@/utils/auth'
+import { getAccessToken, getRefreshToken, removeToken, setToken } from '@/utils/auth'
 import errorCode from './errorCode'
 
 import { resetRouter } from '@/router'
 import { deleteUserCache } from '@/hooks/web/useCache'
 
-const tenantEnable = import.meta.env.VITE_APP_TENANT_ENABLE
+// 移除租户相关配置
+// const tenantEnable = import.meta.env.VITE_APP_TENANT_ENABLE
 const { result_code, base_url, request_timeout } = config
 
 // 需要忽略的提示。忽略后，自动 Promise.reject('error')
@@ -31,7 +32,7 @@ let requestList: any[] = []
 // 是否正在刷新中
 let isRefreshToken = false
 // 请求白名单，无须token的接口
-const whiteList: string[] = ['/login', '/refresh-token']
+const whiteList: string[] = ['/login', '/refresh-token', '/register']
 
 // 创建axios实例
 const service: AxiosInstance = axios.create({
@@ -54,11 +55,11 @@ service.interceptors.request.use(
     if (getAccessToken() && !isToken) {
       ;(config as Recordable).headers.Authorization = 'Bearer ' + getAccessToken() // 让每个请求携带自定义token
     }
-    // 设置租户
-    if (tenantEnable && tenantEnable === 'true') {
-      const tenantId = getTenantId()
-      if (tenantId) (config as Recordable).headers['tenant-id'] = tenantId
-    }
+    // 移除租户相关代码
+    // if (tenantEnable && tenantEnable === 'true') {
+    //   const tenantId = getTenantId()
+    //   if (tenantId) (config as Recordable).headers['tenant-id'] = tenantId
+    // }
     const params = config.params || {}
     const data = config.data || false
     if (
@@ -91,7 +92,7 @@ service.interceptors.response.use(
     let { data } = response
     const config = response.config
     if (!data) {
-      // 返回“[HTTP]请求没有返回值”;
+      // 返回“[HTTP]请求没有返回值”；
       throw new Error()
     }
     const { t } = useI18n()
@@ -199,7 +200,9 @@ service.interceptors.response.use(
 )
 
 const refreshToken = async () => {
-  axios.defaults.headers.common['tenant-id'] = getTenantId()
+  // 移除租户相关代码
+  // axios.defaults.headers.common['tenant-id'] = getTenantId()
+  
   return await axios.post(base_url + '/system/auth/refresh-token?refreshToken=' + getRefreshToken())
 }
 const handleAuthorized = () => {

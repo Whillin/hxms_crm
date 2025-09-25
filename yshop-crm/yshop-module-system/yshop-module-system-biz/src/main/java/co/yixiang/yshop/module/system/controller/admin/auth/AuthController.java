@@ -147,11 +147,4 @@ public class AuthController {
                 type, UserTypeEnum.ADMIN.getValue(), redirectUri));
     }
 
-    @PostMapping("/social-login")
-    @PermitAll
-    @Operation(summary = "社交快捷登录，使用 code 授权码", description = "适合未登录的用户，但是社交账号已绑定用户")
-    public CommonResult<AuthLoginRespVO> socialQuickLogin(@RequestBody @Valid AuthSocialLoginReqVO reqVO) {
-        return success(authService.socialLogin(reqVO));
-    }
-
 }

@@ -14,6 +14,7 @@ import co.yixiang.yshop.module.system.controller.admin.auth.vo.*;
 import co.yixiang.yshop.module.system.convert.auth.AuthConvert;
 import co.yixiang.yshop.module.system.dal.dataobject.oauth2.OAuth2AccessTokenDO;
 import co.yixiang.yshop.module.system.dal.dataobject.user.AdminUserDO;
+import co.yixiang.yshop.module.system.dal.dataobject.employee.EmployeeDO;
 import co.yixiang.yshop.module.system.enums.logger.LoginLogTypeEnum;
 import co.yixiang.yshop.module.system.enums.logger.LoginResultEnum;
 import co.yixiang.yshop.module.system.enums.oauth2.OAuth2ClientConstants;
@@ -23,6 +24,9 @@ import co.yixiang.yshop.module.system.service.member.MemberService;
 import co.yixiang.yshop.module.system.service.oauth2.OAuth2TokenService;
 import co.yixiang.yshop.module.system.service.social.SocialUserService;
 import co.yixiang.yshop.module.system.service.user.AdminUserService;
+import co.yixiang.yshop.module.system.service.employee.EmployeeService;
+import co.yixiang.yshop.module.system.service.permission.PermissionService;
+import co.yixiang.yshop.module.system.service.permission.PositionRoleMappingService;
 import com.google.common.annotations.VisibleForTesting;
 import com.xingyuv.captcha.model.common.ResponseModel;
 import com.xingyuv.captcha.model.vo.CaptchaVO;
@@ -34,6 +38,7 @@ import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import jakarta.validation.Validator;
 import java.util.Objects;
+import java.util.Set;
 
 import static co.yixiang.yshop.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static co.yixiang.yshop.framework.common.util.servlet.ServletUtils.getClientIP;
@@ -64,6 +69,15 @@ public class AdminAuthServiceImpl implements AdminAuthService {
     private CaptchaService captchaService;
     @Resource
     private SmsCodeApi smsCodeApi;
+
+    @Resource
+    private EmployeeService employeeService;
+    
+    @Resource
+    private PermissionService permissionService;
+    
+    @Resource
+    private PositionRoleMappingService positionRoleMappingService;
 
     /**
      * 验证码的开关，默认为 true
@@ -245,6 +259,28 @@ public class AdminAuthServiceImpl implements AdminAuthService {
 
     private UserTypeEnum getUserType() {
         return UserTypeEnum.ADMIN;
+    }
+
+    /**
+     * 校验验证码
+     *
+     * @param captchaVerification 验证码验证信息
+     */
+    private void validateCaptcha(String captchaVerification) {
+        // 如果验证码关闭，则不进行校验
+        if (!captchaEnable) {
+            return;
+        }
+        // 校验验证码
+        CaptchaVO captchaVO = new CaptchaVO();
+        captchaVO.setCaptchaVerification(captchaVerification);
+        ResponseModel response = captchaService.verification(captchaVO);
+        // 验证不通过
+        if (!response.isSuccess()) {
+            // 创建登录失败的日志（验证码不正确)
+            createLoginLog(null, null, LoginLogTypeEnum.LOGIN_USERNAME, LoginResultEnum.CAPTCHA_CODE_ERROR);
+            throw exception(AUTH_LOGIN_CAPTCHA_CODE_ERROR);
+        }
     }
 
 }

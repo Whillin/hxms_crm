@@ -407,7 +407,32 @@ export default {
       confirmPassword: '确认密码',
       email: '邮箱',
       smsCode: '短信验证码',
-      mobile: '手机号码'
+      mobile: '手机号码',
+      // 注册相关
+      register: '注册',
+      registerButton: '注册',
+      hasUser: '已有账号？去登录',
+      nickname: '用户昵称',
+      fullName: '真实姓名',
+      nicknamePlaceholder: '请输入用户昵称',
+      fullNamePlaceholder: '请输入真实姓名',
+      emailPlaceholder: '请输入邮箱地址（可选）',
+      confirmPasswordPlaceholder: '请再次输入密码',
+      // 验证消息
+      nicknameRequired: '请输入用户昵称',
+      fullNameRequired: '请输入真实姓名',
+      mobileRequired: '请输入手机号码',
+      mobileFormat: '请输入正确的手机号码格式',
+      emailRequired: '请输入邮箱地址',
+      emailFormat: '请输入正确的邮箱格式',
+      passwordRequired: '请输入密码',
+      passwordLength: '密码长度至少6位',
+      passwordMinLength: '密码长度至少8位',
+      passwordStrengthWeak: '密码强度不够，需包含大小写字母、数字和特殊字符',
+      confirmPasswordRequired: '请再次输入密码',
+      passwordMismatch: '两次输入的密码不一致',
+      registerSuccess: '注册成功！',
+      registerFailed: '注册失败，请重试'
     }
   },
   profile: {

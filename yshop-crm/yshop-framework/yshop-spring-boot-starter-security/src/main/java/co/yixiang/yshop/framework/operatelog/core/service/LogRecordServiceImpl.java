@@ -45,12 +45,17 @@ public class LogRecordServiceImpl implements ILogRecordService {
 
     private static void fillUserFields(OperateLogCreateReqDTO reqDTO) {
         // 使用 SecurityFrameworkUtils。因为要考虑，rpc、mq、job，它其实不是 web；
-        LoginUser loginUser = SecurityFrameworkUtils.getLoginUser();
-        if (loginUser == null) {
-            return;
+        try {
+            LoginUser loginUser = SecurityFrameworkUtils.getLoginUser();
+            if (loginUser == null) {
+                return;
+            }
+            reqDTO.setUserId(loginUser.getId());
+            reqDTO.setUserType(loginUser.getUserType());
+        } catch (Exception e) {
+            // 在某些场景下（如注册、公开接口等），可能无法获取登录用户信息，此时静默处理
+            log.debug("无法获取登录用户信息，跳过用户字段填充: {}", e.getMessage());
         }
-        reqDTO.setUserId(loginUser.getId());
-        reqDTO.setUserType(loginUser.getUserType());
     }
 
     public static void fillModuleFields(OperateLogCreateReqDTO reqDTO, LogRecord logRecord) {

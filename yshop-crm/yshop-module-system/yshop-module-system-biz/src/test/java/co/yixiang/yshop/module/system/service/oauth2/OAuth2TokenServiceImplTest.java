@@ -5,7 +5,7 @@ import co.yixiang.yshop.framework.common.enums.UserTypeEnum;
 import co.yixiang.yshop.framework.common.exception.ErrorCode;
 import co.yixiang.yshop.framework.common.pojo.PageResult;
 import co.yixiang.yshop.framework.common.util.date.DateUtils;
-import co.yixiang.yshop.framework.tenant.core.context.TenantContextHolder;
+// import co.yixiang.yshop.framework.tenant.core.context.TenantContextHolder;
 import co.yixiang.yshop.framework.test.core.ut.BaseDbAndRedisUnitTest;
 import co.yixiang.yshop.module.system.controller.admin.oauth2.vo.token.OAuth2AccessTokenPageReqVO;
 import co.yixiang.yshop.module.system.dal.dataobject.oauth2.OAuth2AccessTokenDO;
@@ -59,7 +59,7 @@ public class OAuth2TokenServiceImplTest extends BaseDbAndRedisUnitTest {
 
     @Test
     public void testCreateAccessToken() {
-        TenantContextHolder.setTenantId(0L);
+        // TenantContextHolder.setTenantId(0L);
         // 准备参数
         Long userId = randomLongId();
         Integer userType = UserTypeEnum.ADMIN.getValue();
@@ -147,7 +147,7 @@ public class OAuth2TokenServiceImplTest extends BaseDbAndRedisUnitTest {
 
     @Test
     public void testRefreshAccessToken_success() {
-        TenantContextHolder.setTenantId(0L);
+        // TenantContextHolder.setTenantId(0L);
         // 准备参数
         String refreshToken = randomString();
         String clientId = randomString();

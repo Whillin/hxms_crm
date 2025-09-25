@@ -56,15 +56,13 @@
             class="h-full flex items-center m-auto w-[100%] @2xl:max-w-500px @xl:max-w-500px @md:max-w-500px @lg:max-w-500px"
           >
             <!-- 账号登录 -->
-            <LoginForm class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)" />
+            <LoginForm v-show="getLoginState === LoginStateEnum.LOGIN" class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)" />
             <!-- 手机登录 -->
-            <!-- <MobileForm class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)" />
-             二维码登录 -->
-            <!-- <QrCodeForm class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)" />
-             注册 -->
-            <!-- <RegisterForm class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)" /> -->
+            <MobileForm v-show="getLoginState === LoginStateEnum.MOBILE" class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)" />
+            <!-- 二维码登录 -->
+            <QrCodeForm v-show="getLoginState === LoginStateEnum.QR_CODE" class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)" />
             <!-- 三方登录 -->
-            <!-- <SSOLoginVue class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)" /> --> 
+            <SSOLoginVue v-show="getLoginState === LoginStateEnum.SSO" class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)" /> 
           </div>
         </Transition>
       </div>
@@ -79,13 +77,14 @@ import { useAppStore } from '@/store/modules/app'
 //import { ThemeSwitch } from '@/layout/components/ThemeSwitch'
 //import { LocaleDropdown } from '@/layout/components/LocaleDropdown'
 
-import { LoginForm } from './components'
-// import { LoginForm, MobileForm, QrCodeForm, RegisterForm, SSOLoginVue } from './components'
+import { LoginForm, MobileForm, QrCodeForm, SSOLoginVue } from './components'
+import { LoginStateEnum, useLoginState } from './components/useLogin'
 
 const { t } = useI18n()
 const appStore = useAppStore()
 const { getPrefixCls } = useDesign()
 const prefixCls = getPrefixCls('login')
+const { getLoginState } = useLoginState()
 appStore.setIsDark(false)
 </script>
 

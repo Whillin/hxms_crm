@@ -17,6 +17,8 @@ public enum LoginLogTypeEnum {
 
     LOGOUT_SELF(200),  // 自己主动登出
     LOGOUT_DELETE(202), // 强制退出
+    
+    REGISTER(300), // 用户注册
     ;
 
     /**

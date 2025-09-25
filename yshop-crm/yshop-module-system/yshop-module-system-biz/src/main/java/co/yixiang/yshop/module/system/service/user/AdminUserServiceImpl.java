@@ -25,7 +25,7 @@ import co.yixiang.yshop.module.system.dal.mysql.user.AdminUserMapper;
 import co.yixiang.yshop.module.system.service.dept.DeptService;
 import co.yixiang.yshop.module.system.service.dept.PostService;
 import co.yixiang.yshop.module.system.service.permission.PermissionService;
-import co.yixiang.yshop.module.system.service.tenant.TenantService;
+// import co.yixiang.yshop.module.system.service.tenant.TenantService;
 import com.google.common.annotations.VisibleForTesting;
 import com.mzt.logapi.context.LogRecordContext;
 import com.mzt.logapi.service.impl.DiffParseFunction;
@@ -71,9 +71,9 @@ public class AdminUserServiceImpl implements AdminUserService {
     private PermissionService permissionService;
     @Resource
     private PasswordEncoder passwordEncoder;
-    @Resource
-    @Lazy // 延迟，避免循环依赖报错
-    private TenantService tenantService;
+    // @Resource
+    // @Lazy // 延迟，避免循环依赖报错
+    // private TenantService tenantService;
 
     @Resource
     private UserPostMapper userPostMapper;
@@ -87,12 +87,12 @@ public class AdminUserServiceImpl implements AdminUserService {
             success = SYSTEM_USER_CREATE_SUCCESS)
     public Long createUser(UserSaveReqVO createReqVO) {
         // 1.1 校验账户配合
-        tenantService.handleTenantInfo(tenant -> {
-            long count = userMapper.selectCount();
-            if (count >= tenant.getAccountCount()) {
-                throw exception(USER_COUNT_MAX, tenant.getAccountCount());
-            }
-        });
+        // tenantService.handleTenantInfo(tenant -> {
+        //     long count = userMapper.selectCount();
+        //     if (count >= tenant.getAccountCount()) {
+        //         throw exception(USER_COUNT_MAX, tenant.getAccountCount());
+        //     }
+        // });
         // 1.2 校验正确性
         validateUserForCreateOrUpdate(null, createReqVO.getUsername(),
                 createReqVO.getMobile(), createReqVO.getEmail(), createReqVO.getDeptId(), createReqVO.getPostIds());
@@ -109,6 +109,29 @@ public class AdminUserServiceImpl implements AdminUserService {
 
         // 3. 记录操作日志上下文
         LogRecordContext.putVariable("user", user);
+        return user.getId();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long createUser(AdminUserDO user) {
+        // 1. 校验租户是否超过限制
+        // tenantService.handleTenantInfo(tenant -> {
+        //     long count = userMapper.selectCount();
+        //     if (count >= tenant.getAccountCount()) {
+        //         throw exception(USER_COUNT_MAX, tenant.getAccountCount());
+        //     }
+        // });
+        // 2. 校验正确性
+        validateUserForCreateOrUpdate(null, user.getUsername(),
+                user.getMobile(), user.getEmail(), user.getDeptId(), user.getPostIds());
+        // 3. 插入用户
+        userMapper.insert(user);
+        // 4. 插入关联岗位
+        if (CollectionUtil.isNotEmpty(user.getPostIds())) {
+            userPostMapper.insertBatch(convertList(user.getPostIds(),
+                    postId -> new UserPostDO().setUserId(user.getId()).setPostId(postId)));
+        }
         return user.getId();
     }
 
@@ -475,13 +498,18 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     /**
-     * 对密码进行加密
+     * 加密密码
      *
      * @param password 密码
      * @return 加密后的密码
      */
-    private String encodePassword(String password) {
+    public String encodePassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+    @Override
+    public AdminUserDO getUserByEmail(String email) {
+        return userMapper.selectByEmail(email);
     }
 
 }

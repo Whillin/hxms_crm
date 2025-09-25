@@ -2,7 +2,7 @@ package co.yixiang.yshop.module.system.dal.dataobject.user;
 
 import co.yixiang.yshop.framework.common.enums.CommonStatusEnum;
 import co.yixiang.yshop.framework.mybatis.core.type.JsonLongSetTypeHandler;
-import co.yixiang.yshop.framework.tenant.core.db.TenantBaseDO;
+import co.yixiang.yshop.framework.mybatis.core.dataobject.BaseDO;
 import co.yixiang.yshop.module.system.enums.common.SexEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -26,7 +26,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdminUserDO extends TenantBaseDO {
+public class AdminUserDO extends BaseDO {
 
     /**
      * 用户ID

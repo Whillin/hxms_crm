@@ -2,7 +2,7 @@ package co.yixiang.yshop.framework.websocket.core.session;
 
 import cn.hutool.core.collection.CollUtil;
 import co.yixiang.yshop.framework.security.core.LoginUser;
-import co.yixiang.yshop.framework.tenant.core.context.TenantContextHolder;
+// 租户相关导入已移除
 import co.yixiang.yshop.framework.websocket.core.util.WebSocketFrameworkUtils;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -95,17 +95,10 @@ public class WebSocketSessionManagerImpl implements WebSocketSessionManager {
             return new ArrayList<>();
         }
         LinkedList<WebSocketSession> result = new LinkedList<>(); // 避免扩容
-        Long contextTenantId = TenantContextHolder.getTenantId();
+        // 租户功能已移除，直接返回所有会话
         for (List<WebSocketSession> sessions : userSessionsMap.values()) {
             if (CollUtil.isEmpty(sessions)) {
                 continue;
-            }
-            // 特殊：如果租户不匹配，则直接排除
-            if (contextTenantId != null) {
-                Long userTenantId = WebSocketFrameworkUtils.getTenantId(sessions.get(0));
-                if (!contextTenantId.equals(userTenantId)) {
-                    continue;
-                }
             }
             result.addAll(sessions);
         }

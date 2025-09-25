@@ -10,7 +10,8 @@ import co.yixiang.yshop.framework.common.exception.enums.GlobalErrorCodeConstant
 import co.yixiang.yshop.framework.common.pojo.PageResult;
 import co.yixiang.yshop.framework.common.util.date.DateUtils;
 import co.yixiang.yshop.framework.security.core.LoginUser;
-import co.yixiang.yshop.framework.tenant.core.context.TenantContextHolder;
+// 移除租户相关导入
+// import co.yixiang.yshop.framework.tenant.core.context.TenantContextHolder;
 import co.yixiang.yshop.module.system.controller.admin.oauth2.vo.token.OAuth2AccessTokenPageReqVO;
 import co.yixiang.yshop.module.system.dal.dataobject.oauth2.OAuth2AccessTokenDO;
 import co.yixiang.yshop.module.system.dal.dataobject.oauth2.OAuth2ClientDO;
@@ -151,9 +152,10 @@ public class OAuth2TokenServiceImpl implements OAuth2TokenService {
                 .setUserId(refreshTokenDO.getUserId()).setUserType(refreshTokenDO.getUserType())
                 .setUserInfo(buildUserInfo(refreshTokenDO.getUserId(), refreshTokenDO.getUserType()))
                 .setClientId(clientDO.getClientId()).setScopes(refreshTokenDO.getScopes())
-                .setRefreshToken(refreshTokenDO.getRefreshToken())
-                .setExpiresTime(LocalDateTime.now().plusSeconds(clientDO.getAccessTokenValiditySeconds()));
-        accessTokenDO.setTenantId(TenantContextHolder.getTenantId()); // 手动设置租户编号，避免缓存到 Redis 的时候，无对应的租户编号
+                .setRefreshToken(refreshTokenDO.getRefreshToken());
+        accessTokenDO.setExpiresTime(LocalDateTime.now().plusSeconds(clientDO.getAccessTokenValiditySeconds()));
+        // 移除租户相关逻辑
+        // accessTokenDO.setTenantId(TenantContextHolder.getTenantId()); // 手动设置租户编号，避免缓存到 Redis 的时候，无对应的租户编号
         oauth2AccessTokenMapper.insert(accessTokenDO);
         // 记录到 Redis 中
         oauth2AccessTokenRedisDAO.set(accessTokenDO);

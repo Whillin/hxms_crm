@@ -1,6 +1,5 @@
 package co.yixiang.yshop.module.system.framework.web.config;
 
-import co.yixiang.yshop.framework.swagger.config.YshopSwaggerAutoConfiguration;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +17,10 @@ public class SystemWebConfiguration {
      */
     @Bean
     public GroupedOpenApi systemGroupedOpenApi() {
-        return YshopSwaggerAutoConfiguration.buildGroupedOpenApi("system");
+        return GroupedOpenApi.builder()
+                .group("system")
+                .pathsToMatch("/system/**", "/admin-api/system/**")
+                .build();
     }
 
 }

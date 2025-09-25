@@ -1,6 +1,6 @@
 package co.yixiang.yshop.module.infra.framework.web.config;
 
-import co.yixiang.yshop.framework.swagger.config.YshopSwaggerAutoConfiguration;
+// import co.yixiang.yshop.framework.swagger.config.YshopSwaggerAutoConfiguration;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,11 @@ public class InfraWebConfiguration {
      */
     @Bean
     public GroupedOpenApi infraGroupedOpenApi() {
-        return YshopSwaggerAutoConfiguration.buildGroupedOpenApi("infra");
+        // return YshopSwaggerAutoConfiguration.buildGroupedOpenApi("infra");
+        return GroupedOpenApi.builder()
+                .group("infra")
+                .pathsToMatch("/admin-api/infra/**")
+                .build();
     }
 
 }

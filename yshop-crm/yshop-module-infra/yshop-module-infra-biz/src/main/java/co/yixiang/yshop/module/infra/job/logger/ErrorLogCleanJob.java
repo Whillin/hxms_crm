@@ -1,7 +1,7 @@
 package co.yixiang.yshop.module.infra.job.logger;
 
 import co.yixiang.yshop.framework.quartz.core.handler.JobHandler;
-import co.yixiang.yshop.framework.tenant.core.aop.TenantIgnore;
+// import co.yixiang.yshop.framework.tenant.core.aop.TenantIgnore;
 import co.yixiang.yshop.module.infra.service.logger.ApiErrorLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,8 @@ public class ErrorLogCleanJob implements JobHandler {
     private static final Integer DELETE_LIMIT = 100;
 
     @Override
-    @TenantIgnore
+    // 移除租户相关注解
+    // @TenantIgnore
     public String execute(String param) {
         Integer count = apiErrorLogService.cleanErrorLog(JOB_CLEAN_RETAIN_DAY,DELETE_LIMIT);
         log.info("[execute][定时执行清理错误日志数量 ({}) 个]", count);

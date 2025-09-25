@@ -70,4 +70,9 @@ public interface AdminAuthService {
      */
     AuthLoginRespVO refreshToken(String refreshToken);
 
+    /**
+     * 员工注册
+     */
+    // void register(AuthRegisterReqVO reqVO);
+
 }

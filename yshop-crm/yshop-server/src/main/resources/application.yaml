@@ -140,7 +140,21 @@ yshop:
     admin-ui:
       url: http://dashboard.yshop.yixiang.co # Admin 管理后台 UI 的地址
   security:
-    permit-all_urls:
+    permit-all-urls:
+      - /admin-api/system/auth/login
+      - /admin-api/system/auth/logout
+      - /admin-api/system/auth/refresh-token
+      - /admin-api/system/captcha/get
+      - /admin-api/system/captcha/check
+      - /admin-api/infra/file/*/get/**
+      - /app-api/system/auth/login
+      - /app-api/system/auth/logout
+      - /app-api/system/auth/refresh-token
+      - /app-api/system/auth/send-sms-code
+      - /app-api/system/auth/reset-password
+      - /app-api/system/captcha/get
+      - /app-api/system/captcha/check
+      - /app-api/infra/file/get/**
       - /admin-api/mp/open/** # 微信公众号开放平台，微信回调接口，不需要登录
       - /admin-api/file/**
   websocket:

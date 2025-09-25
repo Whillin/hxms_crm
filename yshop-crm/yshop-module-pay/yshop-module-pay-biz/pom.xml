@@ -29,10 +29,7 @@
 <!--            <groupId>co.yixiang.boot</groupId>-->
 <!--            <artifactId>yshop-spring-boot-starter-biz-operatelog</artifactId>-->
 <!--        </dependency>-->
-        <dependency>
-            <groupId>co.yixiang.boot</groupId>
-            <artifactId>yshop-spring-boot-starter-biz-tenant</artifactId>
-        </dependency>
+        <!-- 租户依赖已移除 -->
 
         <!-- Web 相关 -->
         <dependency>

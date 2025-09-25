@@ -1,7 +1,7 @@
 package co.yixiang.yshop.module.infra.job.job;
 
 import co.yixiang.yshop.framework.quartz.core.handler.JobHandler;
-import co.yixiang.yshop.framework.tenant.core.aop.TenantIgnore;
+// import co.yixiang.yshop.framework.tenant.core.aop.TenantIgnore;
 import co.yixiang.yshop.module.infra.service.job.JobLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,8 @@ public class JobLogCleanJob implements JobHandler {
     private static final Integer DELETE_LIMIT = 100;
 
     @Override
-    @TenantIgnore
+    // 移除租户相关注解
+    // @TenantIgnore
     public String execute(String param) {
         Integer count = jobLogService.cleanJobLog(JOB_CLEAN_RETAIN_DAY, DELETE_LIMIT);
         log.info("[execute][定时执行清理定时任务日志数量 ({}) 个]", count);

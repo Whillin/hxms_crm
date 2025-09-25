@@ -148,6 +148,8 @@ logging:
     # 配置自己写的 MyBatis Mapper 打印日志
     co.yixiang.yshop.module.bpm.dal.mysql: debug
     co.yixiang.yshop.module.infra.dal.mysql: debug
+    # 配置 Security 框架的日志级别为 debug，用于调试 @PermitAll 注解
+    co.yixiang.yshop.framework.security: debug
     co.yixiang.yshop.module.infra.dal.mysql.logger.ApiErrorLogMapper: INFO # 配置 ApiErrorLogMapper 的日志级别为 info，避免和 GlobalExceptionHandler 重复打印
     co.yixiang.yshop.module.infra.dal.mysql.job.JobLogMapper: INFO # 配置 JobLogMapper 的日志级别为 info
     co.yixiang.yshop.module.infra.dal.mysql.file.FileConfigMapper: INFO # 配置 FileConfigMapper 的日志级别为 info

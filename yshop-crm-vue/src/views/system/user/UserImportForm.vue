@@ -75,8 +75,11 @@ const submitForm = async () => {
   }
   // 提交请求
   uploadHeaders.value = {
-    Authorization: 'Bearer ' + getAccessToken(),
-    'tenant-id': getTenantId()
+    headers: {
+      Authorization: 'Bearer ' + getAccessToken()
+      // 移除租户相关代码
+      // 'tenant-id': getTenantId()
+    }
   }
   formLoading.value = true
   uploadRef.value!.submit()

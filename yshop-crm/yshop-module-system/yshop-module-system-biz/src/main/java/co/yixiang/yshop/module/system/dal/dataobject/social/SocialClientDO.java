@@ -2,7 +2,7 @@ package co.yixiang.yshop.module.system.dal.dataobject.social;
 
 import co.yixiang.yshop.framework.common.enums.CommonStatusEnum;
 import co.yixiang.yshop.framework.common.enums.UserTypeEnum;
-import co.yixiang.yshop.framework.tenant.core.db.TenantBaseDO;
+import co.yixiang.yshop.framework.mybatis.core.dataobject.BaseDO;
 import co.yixiang.yshop.module.system.enums.social.SocialTypeEnum;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -24,7 +24,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SocialClientDO extends TenantBaseDO {
+public class SocialClientDO extends BaseDO {
 
     /**
      * 编号，自增
